@@ -6,531 +6,218 @@
   <title>字段工具 - 自增 & 翻译</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
-      --text-primary: #1f2329;
-      --text-secondary: #646a73;
-      --text-tertiary: #8f959e;
-      --text-disabled: #bbbfc4;
-      --bg-primary: #ffffff;
-      --bg-secondary: #f5f6f7;
-      --bg-tertiary: #f0f1f2;
-      --border-color: #dee0e3;
-      --border-light: #e6e7e9;
-      --primary-color: #3370ff;
-      --primary-hover: #245bdb;
-      --primary-active: #1a4bc4;
-      --success-color: #00b42a;
-      --warning-color: #ff7d00;
-      --error-color: #f53f3f;
-      --hover-bg: rgba(31, 35, 41, 0.06);
-      --press-bg: rgba(31, 35, 41, 0.1);
+      --text-primary: #1f2329; --text-secondary: #646a73; --text-tertiary: #8f959e;
+      --bg-primary: #ffffff; --bg-secondary: #f5f6f7; --bg-tertiary: #f0f1f2;
+      --border-color: #dee0e3; --border-light: #e6e7e9;
+      --primary-color: #3370ff; --primary-hover: #245bdb;
+      --success-color: #00b42a; --warning-color: #ff7d00; --error-color: #f53f3f;
+      --hover-bg: rgba(31,35,41,0.06);
     }
-
     [data-theme="dark"] {
-      --text-primary: #e8eaed;
-      --text-secondary: #a7acb4;
-      --text-tertiary: #7e828b;
-      --text-disabled: #545861;
-      --bg-primary: #252525;
-      --bg-secondary: #2f2f2f;
-      --bg-tertiary: #383838;
-      --border-color: #434343;
-      --border-light: #3a3a3a;
-      --primary-color: #4571e1;
-      --primary-hover: #5a85e8;
-      --primary-active: #6b94ec;
-      --success-color: #23c343;
-      --warning-color: #ff8800;
-      --error-color: #f76560;
-      --hover-bg: rgba(255, 255, 255, 0.08);
-      --press-bg: rgba(255, 255, 255, 0.12);
+      --text-primary: #e8eaed; --text-secondary: #a7acb4; --text-tertiary: #7e828b;
+      --bg-primary: #252525; --bg-secondary: #2f2f2f; --bg-tertiary: #383838;
+      --border-color: #434343; --border-light: #3a3a3a;
+      --primary-color: #4571e1; --primary-hover: #5a85e8;
+      --success-color: #23c343; --warning-color: #ff8800; --error-color: #f76560;
+      --hover-bg: rgba(255,255,255,0.08);
     }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Tahoma,
-        'PingFang SC', 'Microsoft Yahei', Arial, 'Hiragino Sans GB', sans-serif;
-      font-size: 14px;
-      line-height: 1.5715;
-      color: var(--text-primary);
-      background-color: var(--bg-primary);
-      -webkit-font-smoothing: antialiased;
-      padding: 0;
-      min-height: 100vh;
+      font-family: -apple-system,BlinkMacSystemFont,'Helvetica Neue',Tahoma,'PingFang SC','Microsoft Yahei',Arial,sans-serif;
+      font-size: 14px; line-height: 1.5715; color: var(--text-primary);
+      background: var(--bg-primary); -webkit-font-smoothing: antialiased; min-height: 100vh;
     }
-
-    .app-container { max-width: 100%; padding: 16px; }
-
-    /* Tab 切换 */
-    .tab-header {
-      display: flex;
-      border-bottom: 1px solid var(--border-light);
-      margin-bottom: 16px;
-      gap: 0;
-    }
-    .tab-item {
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      margin-bottom: -1px;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .tab-item:hover { color: var(--primary-color); }
-    .tab-item.active {
-      color: var(--primary-color);
-      border-bottom-color: var(--primary-color);
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* 配置卡片 */
-    .config-card {
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-light);
-      border-radius: 6px;
-      padding: 16px;
-      margin-bottom: 16px;
-    }
-    .config-card .card-title {
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    /* 表单项 */
-    .form-group { margin-bottom: 16px; }
-    .form-group:last-child { margin-bottom: 0; }
-
-    .form-label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-    .form-label .required { color: var(--error-color); margin-left: 2px; }
-    .form-label .info-icon {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      line-height: 14px;
-      text-align: center;
-      border-radius: 50%;
-      background-color: var(--bg-tertiary);
-      color: var(--text-secondary);
-      font-size: 10px;
-      margin-left: 4px;
-      cursor: help;
-    }
-
-    .form-select, .form-input, .form-textarea {
-      width: 100%;
-      height: 32px;
-      padding: 0 12px;
-      font-size: 14px;
-      color: var(--text-primary);
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      outline: none;
-      transition: all 0.2s ease;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .form-textarea {
-      height: auto;
-      min-height: 60px;
-      padding: 8px 12px;
-      resize: vertical;
-      font-family: inherit;
-    }
-    .form-select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23646a73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 10px center;
-      padding-right: 32px;
-      cursor: pointer;
-    }
-    .form-select:hover, .form-input:hover, .form-textarea:hover { border-color: var(--primary-color); }
-    .form-select:focus, .form-input:focus, .form-textarea:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 2px rgba(51, 112, 255, 0.15);
-    }
-    .form-select:disabled, .form-input:disabled, .form-textarea:disabled {
-      background-color: var(--bg-secondary);
-      color: var(--text-disabled);
-      cursor: not-allowed;
-    }
-
-    .form-row {
-      display: flex;
-      gap: 12px;
-      align-items: flex-end;
-    }
-    .form-row .form-group { flex: 1; }
-    .form-row .form-group.narrow { flex: 0 0 100px; }
-
-    /* 可折叠区域 */
-    .collapse-header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--text-secondary);
-      cursor: pointer;
-      user-select: none;
-      padding: 4px 0;
-    }
-    .collapse-header .arrow {
-      display: inline-block;
-      transition: transform 0.2s;
-      font-size: 10px;
-    }
-    .collapse-header.open .arrow { transform: rotate(90deg); }
-    .collapse-body {
-      display: none;
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border-light);
-    }
-    .collapse-body.open { display: block; }
-
-    /* 单选组 */
-    .radio-group { display: flex; flex-direction: column; gap: 8px; }
-    .radio-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 4px 0;
-    }
-    .radio-item input[type="radio"] {
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-      accent-color: var(--primary-color);
-    }
-    .radio-item label {
-      font-size: 13px;
-      color: var(--text-primary);
-      cursor: pointer;
-      flex: 1;
-    }
-    .radio-item .inline-input {
-      width: 100px;
-      height: 28px;
-    }
-
-    /* 开关 */
-    .switch-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-    }
-    .switch-row .label {
-      font-size: 13px;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .switch {
-      position: relative;
-      width: 36px;
-      height: 20px;
-      cursor: pointer;
-    }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .switch .slider {
-      position: absolute;
-      inset: 0;
-      background-color: var(--border-color);
-      border-radius: 20px;
-      transition: 0.3s;
-    }
-    .switch .slider:before {
-      content: "";
-      position: absolute;
-      height: 16px;
-      width: 16px;
-      left: 2px;
-      bottom: 2px;
-      background-color: white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-    .switch input:checked + .slider { background-color: var(--primary-color); }
-    .switch input:checked + .slider:before { transform: translateX(16px); }
-
-    /* 按钮 */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 0 16px;
-      height: 32px;
-      font-size: 14px;
-      font-weight: 500;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-      user-select: none;
-      font-family: inherit;
-    }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .btn-primary {
-      background-color: var(--primary-color);
-      color: #fff;
-      border-color: var(--primary-color);
-    }
-    .btn-primary:hover:not(:disabled) {
-      background-color: var(--primary-hover);
-      border-color: var(--primary-hover);
-    }
-    .btn-secondary {
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      border-color: var(--border-color);
-    }
-    .btn-secondary:hover:not(:disabled) {
-      background-color: var(--hover-bg);
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-    .btn-block { width: 100%; }
-    .btn-lg { height: 36px; padding: 0 20px; font-size: 14px; }
-
-    .spinner {
-      display: inline-block;
-      width: 14px;
-      height: 14px;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    .spinner-dark {
-      border-color: var(--border-color);
-      border-top-color: var(--primary-color);
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* 进度 */
-    .progress-section {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border-light);
-    }
-    .progress-title {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .progress-container {
-      width: 100%;
-      height: 6px;
-      background-color: var(--bg-tertiary);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary-color), #5a85e8);
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-    .progress-stats {
-      display: flex;
-      gap: 16px;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--text-secondary);
-    }
-    .progress-stats span b { color: var(--text-primary); }
-
-    /* 提示 */
-    .alert {
-      padding: 8px 12px;
-      border-radius: 4px;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: 6px;
-    }
-    .alert-error {
-      background-color: rgba(245, 63, 63, 0.08);
-      border: 1px solid rgba(245, 63, 63, 0.2);
-      color: var(--error-color);
-    }
-    .alert-success {
-      background-color: rgba(0, 180, 42, 0.08);
-      border: 1px solid rgba(0, 180, 42, 0.2);
-      color: var(--success-color);
-    }
-    .alert-info {
-      background-color: rgba(51, 112, 255, 0.08);
-      border: 1px solid rgba(51, 112, 255, 0.2);
-      color: var(--primary-color);
-    }
-    .hidden { display: none !important; }
-
-    /* 表信息 */
+    .app-container { padding: 16px; }
     .table-info-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background-color: var(--bg-secondary);
-      border-radius: 4px;
-      margin-bottom: 16px;
-      font-size: 12px;
-      color: var(--text-secondary);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 12px; background: var(--bg-secondary); border-radius: 4px;
+      margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);
     }
     .table-info-bar .name { font-weight: 500; color: var(--text-primary); }
     .table-info-bar .count { color: var(--primary-color); font-weight: 600; }
-
+    .tab-header { display: flex; border-bottom: 1px solid var(--border-light); margin-bottom: 16px; }
+    .tab-item {
+      padding: 10px 16px; font-size: 14px; font-weight: 500; color: var(--text-secondary);
+      cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s;
+    }
+    .tab-item:hover { color: var(--primary-color); }
+    .tab-item.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .config-card {
+      background: var(--bg-primary); border: 1px solid var(--border-light);
+      border-radius: 6px; padding: 16px; margin-bottom: 16px;
+    }
+    .config-card .card-title {
+      font-size: 14px; font-weight: 600; margin-bottom: 16px;
+      padding-bottom: 12px; border-bottom: 1px solid var(--border-light);
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; }
+    .form-label .required { color: var(--error-color); margin-left: 2px; }
+    .form-label .info-icon {
+      display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center;
+      border-radius: 50%; background: var(--bg-tertiary); color: var(--text-secondary);
+      font-size: 10px; margin-left: 4px; cursor: help;
+    }
+    .form-select, .form-input, .form-textarea {
+      width: 100%; height: 32px; padding: 0 12px; font-size: 14px; color: var(--text-primary);
+      background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: 4px;
+      outline: none; transition: all .2s; appearance: none; -webkit-appearance: none; font-family: inherit;
+    }
+    .form-textarea { height: auto; min-height: 60px; padding: 8px 12px; resize: vertical; }
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23646a73' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px; cursor: pointer;
+    }
+    .form-select:hover, .form-input:hover, .form-textarea:hover { border-color: var(--primary-color); }
+    .form-select:focus, .form-input:focus, .form-textarea:focus {
+      border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(51,112,255,.15);
+    }
+    .form-select:disabled, .form-input:disabled { background: var(--bg-secondary); color: var(--text-tertiary); cursor: not-allowed; }
+    .form-row { display: flex; gap: 12px; align-items: flex-end; }
+    .form-row .form-group { flex: 1; }
+    .collapse-header {
+      display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary);
+      cursor: pointer; user-select: none; padding: 4px 0;
+    }
+    .collapse-header .arrow { display: inline-block; transition: transform .2s; font-size: 10px; }
+    .collapse-header.open .arrow { transform: rotate(90deg); }
+    .collapse-body { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-light); }
+    .collapse-body.open { display: block; }
+    .radio-group { display: flex; flex-direction: column; gap: 8px; }
+    .radio-item { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; }
+    .radio-item input[type="radio"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary-color); }
+    .radio-item label { font-size: 13px; cursor: pointer; flex: 1; }
+    .radio-item .inline-input { width: 100px; height: 28px; }
+    .switch-row {
+      display: flex; align-items: center; justify-content: space-between; padding: 8px 0;
+    }
+    .switch-row .label { font-size: 13px; display: flex; align-items: center; gap: 4px; }
+    .switch { position: relative; width: 36px; height: 20px; cursor: pointer; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch .slider {
+      position: absolute; inset: 0; background: var(--border-color); border-radius: 20px; transition: .3s;
+    }
+    .switch .slider:before {
+      content: ""; position: absolute; height: 16px; width: 16px; left: 2px; bottom: 2px;
+      background: #fff; border-radius: 50%; transition: .3s;
+    }
+    .switch input:checked + .slider { background: var(--primary-color); }
+    .switch input:checked + .slider:before { transform: translateX(16px); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 0 16px; height: 32px; font-size: 14px; font-weight: 500; border-radius: 4px;
+      border: 1px solid transparent; cursor: pointer; transition: all .2s; white-space: nowrap;
+      user-select: none; font-family: inherit;
+    }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-primary { background: var(--primary-color); color: #fff; border-color: var(--primary-color); }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); border-color: var(--primary-hover); }
+    .btn-block { width: 100%; }
+    .btn-lg { height: 36px; padding: 0 20px; }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3);
+      border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .progress-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); }
+    .progress-title {
+      font-size: 13px; font-weight: 500; margin-bottom: 8px;
+      display: flex; justify-content: space-between;
+    }
+    .progress-container { width: 100%; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
+    .progress-bar {
+      height: 100%; background: linear-gradient(90deg, var(--primary-color), #5a85e8);
+      border-radius: 3px; transition: width .3s;
+    }
+    .progress-stats { display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; }
+    .progress-stats span b { color: var(--text-primary); }
+    .alert {
+      padding: 8px 12px; border-radius: 4px; font-size: 12px; line-height: 1.5;
+      margin-bottom: 12px; display: flex; align-items: flex-start; gap: 6px;
+    }
+    .alert-error { background: rgba(245,63,63,.08); border: 1px solid rgba(245,63,63,.2); color: var(--error-color); }
+    .alert-info { background: rgba(51,112,255,.08); border: 1px solid rgba(51,112,255,.2); color: var(--primary-color); }
+    .alert-warning { background: rgba(255,125,0,.08); border: 1px solid rgba(255,125,0,.2); color: var(--warning-color); }
+    .hidden { display: none !important; }
+    .error-log {
+      margin-top: 12px; padding: 10px; background: var(--bg-secondary); border-radius: 4px;
+      font-size: 11px; color: var(--error-color); max-height: 120px; overflow-y: auto;
+      font-family: monospace; white-space: pre-wrap; word-break: break-all;
+    }
+    .log-line { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--border-light); }
+    .log-line:last-child { border-bottom: none; }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
   </style>
 </head>
 <body>
   <div class="app-container">
-    <!-- 表信息 -->
     <div class="table-info-bar">
       <span>当前表：<span class="name" id="tableName">加载中...</span></span>
       <span>记录数：<span class="count" id="recordCount">0</span></span>
     </div>
 
-    <!-- Tab 切换 -->
     <div class="tab-header">
       <div class="tab-item active" data-tab="autoinc">🔢 自增字段</div>
       <div class="tab-item" data-tab="translate">🌐 字段翻译</div>
     </div>
 
-    <!-- 错误提示 -->
     <div class="alert alert-error hidden" id="errorAlert">
-      <span>⚠️</span>
-      <span id="errorMessage"></span>
+      <span>⚠️</span><span id="errorMessage"></span>
     </div>
 
-    <!-- ========== 自增字段 Tab ========== -->
+    <!-- 自增字段 -->
     <div class="tab-content active" id="tab-autoinc">
       <div class="config-card">
         <div class="card-title">配置</div>
-
         <div class="form-group">
           <label class="form-label">选择目标字段<span class="required">*</span></label>
-          <select class="form-select" id="incTargetField">
-            <option value="">加载中...</option>
-          </select>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">
-            选择要写入自增序号的字段（建议文本或数字字段）
-          </div>
+          <select class="form-select" id="incTargetField"><option value="">加载中...</option></select>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">建议选择「文本」或「数字」类型字段</div>
         </div>
-
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">起始值</label>
-            <input type="number" class="form-input" id="incStart" value="1" min="0" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">步长</label>
-            <input type="number" class="form-input" id="incStep" value="1" min="1" />
-          </div>
-          <div class="form-group">
-            <label class="form-label">位数（补零）</label>
-            <input type="number" class="form-input" id="incPad" value="0" min="0" max="10" />
-          </div>
+          <div class="form-group"><label class="form-label">起始值</label><input type="number" class="form-input" id="incStart" value="1" min="0"></div>
+          <div class="form-group"><label class="form-label">步长</label><input type="number" class="form-input" id="incStep" value="1" min="1"></div>
+          <div class="form-group"><label class="form-label">补零位数</label><input type="number" class="form-input" id="incPad" value="0" min="0" max="10"></div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">前缀</label>
-          <input type="text" class="form-input" id="incPrefix" placeholder="例如：ITEM-" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">后缀</label>
-          <input type="text" class="form-input" id="incSuffix" placeholder="例如：-2024" />
-        </div>
-
-        <!-- 生成范围 -->
+        <div class="form-group"><label class="form-label">前缀</label><input type="text" class="form-input" id="incPrefix" placeholder="如：ITEM-"></div>
+        <div class="form-group"><label class="form-label">后缀</label><input type="text" class="form-input" id="incSuffix" placeholder="如：-2024"></div>
         <div class="form-group" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
           <label class="form-label">生成范围</label>
           <div class="radio-group">
-            <div class="radio-item">
-              <input type="radio" name="incRange" id="incRangeAll" value="all" />
-              <label for="incRangeAll">整列</label>
-            </div>
-            <div class="radio-item">
-              <input type="radio" name="incRange" id="incRangeCustom" value="custom" checked />
-              <label for="incRangeCustom">自定义行数</label>
-              <input type="number" class="form-input inline-input" id="incCustomCount" value="5" min="1" />
-            </div>
+            <div class="radio-item"><input type="radio" name="incRange" id="incRangeAll" value="all"><label for="incRangeAll">整列</label></div>
+            <div class="radio-item"><input type="radio" name="incRange" id="incRangeCustom" value="custom" checked><label for="incRangeCustom">自定义行数</label><input type="number" class="form-input inline-input" id="incCustomCount" value="5" min="1"></div>
           </div>
         </div>
-
-        <!-- 自动更新 -->
         <div class="switch-row" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border-light);">
-          <span class="label">
-            自动更新
-            <span class="info-icon" title="开启后，新增记录时自动为其生成序号">ⓘ</span>
-          </span>
-          <label class="switch">
-            <input type="checkbox" id="incAutoUpdate" />
-            <span class="slider"></span>
-          </label>
+          <span class="label">自动更新 <span class="info-icon" title="开启后新增记录自动生成序号">ⓘ</span></span>
+          <label class="switch"><input type="checkbox" id="incAutoUpdate"><span class="slider"></span></label>
         </div>
-
-        <!-- 执行按钮 -->
-        <button class="btn btn-primary btn-lg btn-block" style="margin-top:16px;" id="incExecuteBtn">
-          🚀 生成自增序号
-        </button>
-
-        <!-- 进度 -->
+        <button class="btn btn-primary btn-lg btn-block" style="margin-top:16px;" id="incExecuteBtn">🚀 生成自增序号</button>
         <div class="progress-section hidden" id="incProgressSection">
-          <div class="progress-title">
-            <span id="incProgressTitle">正在生成...</span>
-            <span id="incProgressPercent">0%</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" id="incProgressBar" style="width:0%"></div>
-          </div>
+          <div class="progress-title"><span id="incProgressTitle">正在生成...</span><span id="incProgressPercent">0%</span></div>
+          <div class="progress-container"><div class="progress-bar" id="incProgressBar" style="width:0%"></div></div>
           <div class="progress-stats">
             <span>总数：<b id="incStatTotal">0</b></span>
-            <span>成功：<b id="incStatSuccess" style="color:var(--success-color)">0</b></span>
-            <span>失败：<b id="incStatFailed" style="color:var(--error-color)">0</b></span>
+            <span>写入成功：<b id="incStatWriteSuccess" style="color:var(--success-color)">0</b></span>
+            <span>写入失败：<b id="incStatWriteFailed" style="color:var(--error-color)">0</b></span>
           </div>
+          <div class="error-log hidden" id="incErrorLog"></div>
         </div>
       </div>
     </div>
 
-    <!-- ========== 字段翻译 Tab ========== -->
+    <!-- 字段翻译 -->
     <div class="tab-content" id="tab-translate">
       <div class="config-card">
         <div class="card-title">配置</div>
-
         <div class="form-group">
           <label class="form-label">选择需要翻译的字段<span class="required">*</span></label>
-          <select class="form-select" id="transSourceField">
-            <option value="">请选择</option>
-          </select>
+          <select class="form-select" id="transSourceField"><option value="">请选择</option></select>
         </div>
-
         <div class="form-group">
           <label class="form-label">目标语言<span class="required">*</span></label>
           <select class="form-select" id="transTargetLang">
@@ -556,496 +243,448 @@
             <option value="nl">🇳🇱 荷兰语</option>
             <option value="pl">🇵🇱 波兰语</option>
           </select>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">
-            源语言将自动识别
-          </div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">源语言自动识别</div>
         </div>
-
         <div class="form-group">
           <label class="form-label">写入目标字段<span class="required">*</span></label>
-          <select class="form-select" id="transTargetField">
-            <option value="">请选择</option>
-          </select>
+          <select class="form-select" id="transTargetField"><option value="">请选择</option></select>
+          <div style="font-size:11px;color:var(--warning-color);margin-top:4px;" id="transFieldWarn" class="hidden">⚠️ 建议目标字段为「文本」或「多行文本」类型</div>
         </div>
-
-        <!-- 自定义翻译要求 -->
         <div class="collapse-header" id="transCustomCollapse">
-          <span class="arrow">▶</span>
-          <span>自定义翻译要求</span>
-          <span class="info-icon" title="可输入额外的翻译要求，如专业术语、语气风格等">ⓘ</span>
+          <span class="arrow">▶</span><span>自定义翻译要求</span>
+          <span class="info-icon" title="输入专业术语、语气风格等要求">ⓘ</span>
         </div>
         <div class="collapse-body" id="transCustomBody">
-          <div class="form-group">
-            <textarea class="form-textarea" id="transCustomPrompt" placeholder="例如：请使用正式的商务用语翻译，保留专业术语不翻译..."></textarea>
-          </div>
+          <div class="form-group"><textarea class="form-textarea" id="transCustomPrompt" placeholder="如：请使用正式商务用语，保留专业术语不翻译..."></textarea></div>
         </div>
-
-        <!-- 生成范围 -->
         <div class="form-group" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
           <label class="form-label">生成范围</label>
           <div class="radio-group">
-            <div class="radio-item">
-              <input type="radio" name="transRange" id="transRangeAll" value="all" />
-              <label for="transRangeAll">整列</label>
-            </div>
-            <div class="radio-item">
-              <input type="radio" name="transRange" id="transRangeCustom" value="custom" checked />
-              <label for="transRangeCustom">自定义行数</label>
-              <input type="number" class="form-input inline-input" id="transCustomCount" value="5" min="1" />
-            </div>
+            <div class="radio-item"><input type="radio" name="transRange" id="transRangeAll" value="all"><label for="transRangeAll">整列</label></div>
+            <div class="radio-item"><input type="radio" name="transRange" id="transRangeCustom" value="custom" checked><label for="transRangeCustom">自定义行数</label><input type="number" class="form-input inline-input" id="transCustomCount" value="5" min="1"></div>
           </div>
         </div>
-
-        <!-- 自动更新 -->
         <div class="switch-row" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border-light);">
-          <span class="label">
-            自动更新
-            <span class="info-icon" title="开启后，新增记录时自动翻译该记录">ⓘ</span>
-          </span>
-          <label class="switch">
-            <input type="checkbox" id="transAutoUpdate" />
-            <span class="slider"></span>
-          </label>
+          <span class="label">自动更新 <span class="info-icon" title="开启后新增记录自动翻译">ⓘ</span></span>
+          <label class="switch"><input type="checkbox" id="transAutoUpdate"><span class="slider"></span></label>
         </div>
-
-        <!-- 执行按钮 -->
-        <button class="btn btn-primary btn-lg btn-block" style="margin-top:16px;" id="transExecuteBtn">
-          🚀 开始翻译
-        </button>
-
-        <!-- 进度 -->
+        <button class="btn btn-primary btn-lg btn-block" style="margin-top:16px;" id="transExecuteBtn">🚀 开始翻译</button>
         <div class="progress-section hidden" id="transProgressSection">
-          <div class="progress-title">
-            <span id="transProgressTitle">正在翻译...</span>
-            <span id="transProgressPercent">0%</span>
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" id="transProgressBar" style="width:0%"></div>
-          </div>
+          <div class="progress-title"><span id="transProgressTitle">正在翻译...</span><span id="transProgressPercent">0%</span></div>
+          <div class="progress-container"><div class="progress-bar" id="transProgressBar" style="width:0%"></div></div>
           <div class="progress-stats">
             <span>总数：<b id="transStatTotal">0</b></span>
-            <span>成功：<b id="transStatSuccess" style="color:var(--success-color)">0</b></span>
-            <span>失败：<b id="transStatFailed" style="color:var(--error-color)">0</b></span>
-            <span>跳过：<b id="transStatSkipped" style="color:var(--text-tertiary)">0</b></span>
+            <span>翻译成功：<b id="transStatTransOk" style="color:var(--primary-color)">0</b></span>
+            <span>翻译失败：<b id="transStatTransFail" style="color:var(--warning-color)">0</b></span>
+            <span>写入成功：<b id="transStatWriteOk" style="color:var(--success-color)">0</b></span>
+            <span>写入失败：<b id="transStatWriteFail" style="color:var(--error-color)">0</b></span>
+            <span>跳过：<b id="transStatSkipped">0</b></span>
           </div>
+          <div class="error-log hidden" id="transErrorLog"></div>
         </div>
       </div>
     </div>
   </div>
 
   <script type="module">
-    // ========== Base SDK 加载 ==========
-    let bitable = null;
-    let isBaseEnv = false;
-
+    let bitable = null, isBaseEnv = false;
     try {
       const sdk = await import('https://esm.sh/@lark-base-open/js-sdk@0.3.8');
-      bitable = sdk.bitable;
-      isBaseEnv = true;
-    } catch (e) {
-      console.warn('Base SDK 加载失败，使用演示模式:', e.message);
+      bitable = sdk.bitable; isBaseEnv = true;
+    } catch(e) {
+      console.warn('SDK加载失败，使用演示模式:', e.message);
       bitable = createMockBitable();
     }
 
     function createMockBitable() {
-      const mockFields = [
-        { id: 'fld1', name: '序号', type: 1 },
-        { id: 'fld2', name: '产品名称', type: 1 },
-        { id: 'fld3', name: '产品描述', type: 1 },
-        { id: 'fld4', name: '英文名称', type: 1 },
-        { id: 'fld5', name: '价格', type: 2 },
-        { id: 'fld6', name: '分类', type: 3 },
+      const fields = [
+        {id:'fld1',name:'序号',type:1},{id:'fld2',name:'产品名称',type:1},
+        {id:'fld3',name:'产品描述',type:1},{id:'fld4',name:'英文名称',type:1},
+        {id:'fld5',name:'价格',type:2},{id:'fld6',name:'分类',type:3},
       ];
-      const mockRecords = [
-        { record_id: 'rec1', fields: { fld1: '', fld2: '智能手表', fld3: '一款功能强大的智能手表', fld4: '', fld6: '电子产品' } },
-        { record_id: 'rec2', fields: { fld1: '', fld2: '无线耳机', fld3: '高品质无线蓝牙耳机', fld4: '', fld6: '电子产品' } },
-        { record_id: 'rec3', fields: { fld1: '', fld2: '机械键盘', fld3: '青轴机械键盘，手感极佳', fld4: '', fld6: '电脑配件' } },
-        { record_id: 'rec4', fields: { fld1: '', fld2: '鼠标垫', fld3: '', fld4: '', fld6: '电脑配件' } },
-        { record_id: 'rec5', fields: { fld1: '', fld2: 'USB集线器', fld3: '4口USB 3.0集线器', fld4: '', fld6: '电脑配件' } },
-        { record_id: 'rec6', fields: { fld1: '', fld2: '显示器支架', fld3: '可调节显示器支架', fld4: '', fld6: '电脑配件' } },
-        { record_id: 'rec7', fields: { fld1: '', fld2: '笔记本电脑包', fld3: '15.6寸防水电脑包', fld4: '', fld6: '电脑配件' } },
+      const records = [
+        {record_id:'rec1',fields:{fld1:'',fld2:'智能手表',fld3:'一款功能强大的智能手表',fld4:'',fld6:'电子产品'}},
+        {record_id:'rec2',fields:{fld1:'',fld2:'无线耳机',fld3:'高品质无线蓝牙耳机',fld4:'',fld6:'电子产品'}},
+        {record_id:'rec3',fields:{fld1:'',fld2:'机械键盘',fld3:'青轴机械键盘，手感极佳',fld4:'',fld6:'电脑配件'}},
+        {record_id:'rec4',fields:{fld1:'',fld2:'鼠标垫',fld3:'',fld4:'',fld6:'电脑配件'}},
+        {record_id:'rec5',fields:{fld1:'',fld2:'USB集线器',fld3:'4口USB 3.0集线器',fld4:'',fld6:'电脑配件'}},
       ];
-
       return {
-        base: {
-          getActiveTable: async () => ({
-            getName: async () => '演示数据表',
-            getFieldMetaList: async () => mockFields,
-            getRecordIdList: async () => mockRecords.map(r => r.record_id),
-            getField: async (fieldId) => ({
-              getValue: async (recordId) => {
-                const r = mockRecords.find(x => x.record_id === recordId);
-                return r ? r.fields[fieldId] : '';
-              },
-              setValue: async (recordId, value) => {
-                const r = mockRecords.find(x => x.record_id === recordId);
-                if (r) r.fields[fieldId] = value;
-                console.log(`[演示] ${recordId}.${fieldId} = ${value}`);
-              },
-            }),
-            setRecords: async (records) => {
-              records.forEach(({ record_id, fields }) => {
-                const r = mockRecords.find(x => x.record_id === record_id);
-                if (r) Object.entries(fields).forEach(([k,v]) => { r.fields[k] = v; });
-              });
-              console.log(`[演示] 批量更新 ${records.length} 条`);
-            },
+        base:{getActiveTable:async()=>({
+          getName:async()=>'演示数据表',
+          getFieldMetaList:async()=>fields,
+          getRecordIdList:async()=>records.map(r=>r.record_id),
+          getField:async(fid)=>({
+            getValue:async(rid)=>{const r=records.find(x=>x.record_id===rid);return r?r.fields[fid]:'';},
+            setValue:async(rid,val)=>{const r=records.find(x=>x.record_id===rid);if(r)r.fields[fid]=val;console.log('[演示]写入',rid,fid,'=',val);},
           }),
-          onSelectionChange: () => () => {},
-        },
-        bridge: {
-          getTheme: async () => 'LIGHT',
-          onThemeChange: () => () => {},
-        },
-        ui: {
-          showToast: async ({ message, type }) => console.log(`[Toast-${type}] ${message}`),
-        },
+          setRecords:async(recs)=>{recs.forEach(({record_id,fields})=>{const r=records.find(x=>x.record_id===record_id);if(r)Object.entries(fields).forEach(([k,v])=>r.fields[k]=v);});console.log('[演示]批量写入',recs.length,'条');},
+        })},
+        bridge:{getTheme:async()=>'LIGHT',onThemeChange:()=>()=>{}},
+        ui:{showToast:async({message,type})=>console.log('[Toast-'+type+']',message)},
       };
     }
 
-    // ========== 翻译服务 ==========
-    async function translateText(text, targetLang, customPrompt = '') {
-      if (!text || !text.trim()) return { text: '', detectedLang: 'auto' };
+    // 翻译服务 - 增加错误详情和重试
+    async function translateText(text, targetLang) {
+      if (!text || !text.trim()) return { ok: true, text: '', detectedLang: 'auto' };
+      const errors = [];
+
+      // 方案1: Google Translate
       try {
-        let url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-        const resp = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+        const resp = await fetch(url, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+          mode: 'cors',
+        });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
         let result = '';
         if (Array.isArray(data) && Array.isArray(data[0])) {
           data[0].forEach(seg => { if (seg && seg[0]) result += seg[0]; });
         }
         if (!result) throw new Error('翻译结果为空');
-        return { text: result, detectedLang: data[2] || 'auto' };
+        return { ok: true, text: result, detectedLang: data[2] || 'auto' };
       } catch (e) {
-        // 备选 MyMemory
-        const langMap = { en: 'en-US', 'zh-CN': 'zh-CN', ja: 'ja', ko: 'ko' };
+        errors.push('Google: ' + e.message);
+        console.warn('Google翻译失败:', e.message);
+      }
+
+      // 方案2: MyMemory
+      try {
+        const langMap = { en:'en-US', 'zh-CN':'zh-CN', 'zh-TW':'zh-TW', ja:'ja', ko:'ko' };
         const mmTarget = langMap[targetLang] || targetLang;
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|${mmTarget}`;
         const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
-        if (data.responseStatus !== 200) throw new Error(data.responseDetails || '翻译失败');
-        return { text: data.responseData.translatedText, detectedLang: 'auto' };
+        if (data.responseStatus !== 200 || !data.responseData) {
+          throw new Error(data.responseDetails || '响应状态异常');
+        }
+        const translated = data.responseData.translatedText;
+        if (!translated) throw new Error('翻译结果为空');
+        return { ok: true, text: translated, detectedLang: 'auto' };
+      } catch (e) {
+        errors.push('MyMemory: ' + e.message);
+        console.warn('MyMemory翻译失败:', e.message);
       }
+
+      return { ok: false, text: '', error: errors.join(' | ') };
     }
 
-    // ========== 工具函数 ==========
     const $ = id => document.getElementById(id);
-    let allFields = [];
-    let allRecordIds = [];
-    let isBusy = false;
+    let allFields = [], allRecordIds = [], isBusy = false;
 
     function showError(msg) {
       $('errorMessage').textContent = msg;
       $('errorAlert').classList.remove('hidden');
-      setTimeout(() => $('errorAlert').classList.add('hidden'), 5000);
+      setTimeout(() => $('errorAlert').classList.add('hidden'), 8000);
     }
-
+    function appendError(logId, msg) {
+      const el = $(logId);
+      el.classList.remove('hidden');
+      const line = document.createElement('div');
+      line.className = 'log-line';
+      line.textContent = msg;
+      el.appendChild(line);
+      el.scrollTop = el.scrollHeight;
+    }
     function getFieldTypeName(type) {
-      const names = { 1:'文本', 2:'数字', 3:'单选', 4:'多选', 5:'日期', 7:'复选框', 11:'人员', 13:'电话', 15:'超链接', 17:'附件', 18:'单向关联', 19:'查找引用', 20:'公式', 21:'双向关联', 22:'地理位置', 23:'群聊', 1001:'创建时间', 1002:'修改时间', 1003:'创建人', 1004:'修改人', 1005:'自动编号', 99001:'条码', 99002:'进度', 99003:'货币', 99004:'评分', 99005:'邮箱' };
-      return names[type] || `类型${type}`;
+      const n = {1:'文本',2:'数字',3:'单选',4:'多选',5:'日期',7:'复选框',11:'人员',13:'电话',15:'超链接',17:'附件',18:'单向关联',19:'查找引用',20:'公式',21:'双向关联',22:'地理位置',23:'群聊',1001:'创建时间',1002:'修改时间',1003:'创建人',1004:'修改人',1005:'自动编号',99001:'条码',99002:'进度',99003:'货币',99004:'评分',99005:'邮箱'};
+      return n[type] || '类型'+type;
+    }
+    function normalizeValue(v) {
+      if (v === null || v === undefined) return '';
+      if (typeof v === 'string') return v;
+      if (typeof v === 'number' || typeof v === 'boolean') return String(v);
+      if (Array.isArray(v)) return v.map(i => typeof i==='string'?i:(i.text||i.name||JSON.stringify(i))).join(', ');
+      if (typeof v === 'object') return v.text || v.name || v.link || JSON.stringify(v);
+      return String(v);
     }
 
-    function normalizeValue(value) {
-      if (value === null || value === undefined) return '';
-      if (typeof value === 'string') return value;
-      if (typeof value === 'number' || typeof value === 'boolean') return String(value);
-      if (Array.isArray(value)) {
-        return value.map(item => typeof item === 'string' ? item : (item.text || item.name || JSON.stringify(item))).join(', ');
-      }
-      if (typeof value === 'object') return value.text || value.name || value.link || JSON.stringify(value);
-      return String(value);
-    }
-
-    // ========== 初始化 ==========
     async function init() {
       try {
         const theme = await bitable.bridge.getTheme();
         document.documentElement.setAttribute('data-theme', theme.toLowerCase());
-        bitable.bridge.onThemeChange((event) => {
-          const t = event.data ? event.data.theme : event.theme;
+        bitable.bridge.onThemeChange(ev => {
+          const t = ev.data ? ev.data.theme : ev.theme;
           document.documentElement.setAttribute('data-theme', t.toLowerCase());
         });
-
         const table = await bitable.base.getActiveTable();
-        const tableName = await table.getName();
+        $('tableName').textContent = await table.getName();
         allFields = await table.getFieldMetaList();
         allRecordIds = await table.getRecordIdList();
-
-        $('tableName').textContent = tableName;
         $('recordCount').textContent = allRecordIds.length;
 
-        // 可写字段类型（排除公式、自动编号、创建/修改时间等只读字段）
-        const writableTypes = [1, 2, 3, 4, 7, 11, 13, 15, 17, 22, 99003, 99004, 99005];
-        const writableFields = allFields.filter(f => writableTypes.includes(f.type));
-        // 可翻译字段（文本类）
-        const translatableTypes = [1, 3, 4, 13, 15, 99005];
-        const translatableFields = allFields.filter(f => translatableTypes.includes(f.type));
+        const writableTypes = [1,2,3,4,7,11,13,15,17,22,99003,99004,99005];
+        const writable = allFields.filter(f => writableTypes.includes(f.type));
+        const textTypes = [1,3,4,13,15,99005];
+        const textFields = allFields.filter(f => textTypes.includes(f.type));
 
-        // 填充自增字段下拉框
-        const incSelect = $('incTargetField');
-        incSelect.innerHTML = '<option value="">请选择目标字段</option>';
-        writableFields.forEach(f => {
-          incSelect.add(new Option(`${f.name} (${getFieldTypeName(f.type)})`, f.id));
-        });
+        const incSel = $('incTargetField');
+        incSel.innerHTML = '<option value="">请选择目标字段</option>';
+        writable.forEach(f => incSel.add(new Option(f.name+' ('+getFieldTypeName(f.type)+')', f.id)));
 
-        // 填充翻译字段下拉框
-        const srcSelect = $('transSourceField');
-        const tgtSelect = $('transTargetField');
-        srcSelect.innerHTML = '<option value="">请选择</option>';
-        tgtSelect.innerHTML = '<option value="">请选择</option>';
-        translatableFields.forEach(f => {
-          srcSelect.add(new Option(`${f.name} (${getFieldTypeName(f.type)})`, f.id));
-          tgtSelect.add(new Option(`${f.name} (${getFieldTypeName(f.type)})`, f.id));
+        const srcSel = $('transSourceField'), tgtSel = $('transTargetField');
+        srcSel.innerHTML = '<option value="">请选择</option>';
+        tgtSel.innerHTML = '<option value="">请选择</option>';
+        textFields.forEach(f => {
+          srcSel.add(new Option(f.name+' ('+getFieldTypeName(f.type)+')', f.id));
+          tgtSel.add(new Option(f.name+' ('+getFieldTypeName(f.type)+')', f.id));
         });
 
         if (!isBaseEnv) {
           setTimeout(() => {
-            const div = document.createElement('div');
-            div.className = 'alert alert-info';
-            div.innerHTML = '<span>ℹ️</span><span>当前为演示模式，数据为模拟数据。在多维表格中添加此插件即可使用真实数据。</span>';
-            document.querySelector('.app-container').insertBefore(div, document.querySelector('.tab-header'));
-            setTimeout(() => div.remove(), 10000);
+            const d = document.createElement('div');
+            d.className = 'alert alert-info';
+            d.innerHTML = '<span>ℹ️</span><span>演示模式：数据为模拟数据。在多维表格中添加此插件即可使用真实数据。</span>';
+            document.querySelector('.app-container').insertBefore(d, document.querySelector('.tab-header'));
+            setTimeout(() => d.remove(), 10000);
           }, 500);
         }
       } catch (e) {
         console.error('初始化失败:', e);
-        showError(`初始化失败: ${e.message || '未知错误'}`);
+        showError('初始化失败: ' + (e.message || '未知错误'));
       }
     }
 
-    // ========== Tab 切换 ==========
+    // Tab切换
     document.querySelectorAll('.tab-item').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
-        $('tab-' + tab.dataset.tab).classList.add('active');
+        $('tab-'+tab.dataset.tab).classList.add('active');
       });
     });
-
-    // ========== 折叠面板 ==========
     $('transCustomCollapse').addEventListener('click', () => {
       $('transCustomCollapse').classList.toggle('open');
       $('transCustomBody').classList.toggle('open');
     });
 
-    // ========== 自增字段功能 ==========
+    // 目标字段类型警告
+    $('transTargetField').addEventListener('change', () => {
+      const fid = $('transTargetField').value;
+      const f = allFields.find(x => x.id === fid);
+      const warn = $('transFieldWarn');
+      if (f && f.type !== 1 && f.type !== 15) {
+        warn.textContent = '⚠️ 当前目标字段类型为「' + getFieldTypeName(f.type) + '」，建议使用「文本」类型以确保写入成功';
+        warn.classList.remove('hidden');
+      } else {
+        warn.classList.add('hidden');
+      }
+    });
+
+    // ========== 自增字段 ==========
     $('incExecuteBtn').addEventListener('click', async () => {
       if (isBusy) return;
       const targetFieldId = $('incTargetField').value;
-      if (!targetFieldId) { bitable.ui.showToast({ message: '请选择目标字段', type: 'warning' }); return; }
+      if (!targetFieldId) { bitable.ui.showToast({message:'请选择目标字段',type:'warning'}); return; }
 
-      const start = parseInt($('incStart').value) || 1;
-      const step = parseInt($('incStep').value) || 1;
-      const pad = parseInt($('incPad').value) || 0;
-      const prefix = $('incPrefix').value || '';
-      const suffix = $('incSuffix').value || '';
+      const start = parseInt($('incStart').value)||1, step = parseInt($('incStep').value)||1;
+      const pad = parseInt($('incPad').value)||0, prefix = $('incPrefix').value||'';
+      const suffix = $('incSuffix').value||'';
       const rangeType = document.querySelector('input[name="incRange"]:checked').value;
-      const customCount = parseInt($('incCustomCount').value) || 5;
+      const customCount = parseInt($('incCustomCount').value)||5;
 
       isBusy = true;
       $('incExecuteBtn').disabled = true;
       $('incExecuteBtn').innerHTML = '<span class="spinner"></span> 生成中...';
       $('incProgressSection').classList.remove('hidden');
-      $('incProgressTitle').textContent = '正在生成自增序号...';
+      $('incErrorLog').innerHTML = '';
+      $('incErrorLog').classList.add('hidden');
+      $('incProgressTitle').textContent = '正在生成...';
+      $('incStatWriteSuccess').textContent = '0';
+      $('incStatWriteFailed').textContent = '0';
 
       try {
         const table = await bitable.base.getActiveTable();
         const targetField = await table.getField(targetFieldId);
-
-        // 确定要处理的记录
         let recordIds = [...allRecordIds];
-        if (rangeType === 'custom') {
-          recordIds = recordIds.slice(0, customCount);
-        }
+        if (rangeType === 'custom') recordIds = recordIds.slice(0, customCount);
         const total = recordIds.length;
         $('incStatTotal').textContent = total;
+        if (total === 0) { bitable.ui.showToast({message:'没有可处理的记录',type:'warning'}); resetIncBtn(); return; }
 
-        if (total === 0) {
-          bitable.ui.showToast({ message: '没有可处理的记录', type: 'warning' });
-          isBusy = false;
-          $('incExecuteBtn').disabled = false;
-          $('incExecuteBtn').innerHTML = '🚀 生成自增序号';
-          return;
-        }
+        let writeSuccess = 0, writeFailed = 0;
 
-        let success = 0, failed = 0;
-        const valuesToWrite = new Map();
-
+        // 逐条写入（最可靠的方式）
         for (let i = 0; i < total; i++) {
           const num = start + i * step;
           let value = String(num);
           if (pad > 0) value = value.padStart(pad, '0');
           value = prefix + value + suffix;
-          valuesToWrite.set(recordIds[i], value);
-        }
 
-        // 批量写入
-        try {
-          const records = Array.from(valuesToWrite.entries()).map(([record_id, value]) => ({
-            record_id,
-            fields: { [targetFieldId]: value }
-          }));
-          await table.setRecords(records);
-          success = total;
-        } catch (e) {
-          console.warn('批量写入失败，逐条写入:', e.message);
-          for (const [recordId, value] of valuesToWrite.entries()) {
-            try {
-              await targetField.setValue(recordId, value);
-              success++;
-            } catch (e2) { failed++; }
+          try {
+            await targetField.setValue(recordIds[i], value);
+            // 验证写入
+            const verify = await targetField.getValue(recordIds[i]);
+            const verifyStr = normalizeValue(verify);
+            if (verifyStr === value || verifyStr.includes(value)) {
+              writeSuccess++;
+            } else {
+              writeFailed++;
+              appendError('incErrorLog', `记录${i+1}(${recordIds[i]}): 写入验证失败，期望值="${value}"，实际值="${verifyStr}"`);
+            }
+          } catch (e) {
+            writeFailed++;
+            appendError('incErrorLog', `记录${i+1}(${recordIds[i]}): 写入异常 - ${e.message || e}`);
           }
+
+          const percent = Math.round(((i+1)/total)*100);
+          $('incProgressBar').style.width = percent+'%';
+          $('incProgressPercent').textContent = percent+'%';
+          $('incStatWriteSuccess').textContent = writeSuccess;
+          $('incStatWriteFailed').textContent = writeFailed;
         }
 
-        $('incStatSuccess').textContent = success;
-        $('incStatFailed').textContent = failed;
-        $('incProgressBar').style.width = '100%';
-        $('incProgressPercent').textContent = '100%';
-        $('incProgressTitle').textContent = failed > 0 ? '⚠️ 部分完成' : '✅ 生成完成';
-        bitable.ui.showToast({ message: `自增序号生成完成！成功 ${success} 条`, type: 'success' });
+        $('incProgressTitle').textContent = writeFailed > 0 ? '⚠️ 部分完成（'+writeSuccess+'/'+total+'）' : '✅ 生成完成（'+writeSuccess+'/'+total+'）';
+        bitable.ui.showToast({message:`自增序号生成完成！成功${writeSuccess}条，失败${writeFailed}条`, type: writeFailed>0?'warning':'success'});
       } catch (e) {
         console.error('生成失败:', e);
-        showError(`生成失败: ${e.message || '未知错误'}`);
+        showError('生成失败: ' + (e.message || '未知错误'));
+        appendError('incErrorLog', '全局异常: ' + (e.message || JSON.stringify(e)));
         $('incProgressTitle').textContent = '❌ 生成失败';
       } finally {
+        resetIncBtn();
+      }
+      function resetIncBtn() {
         isBusy = false;
         $('incExecuteBtn').disabled = false;
         $('incExecuteBtn').innerHTML = '🚀 生成自增序号';
       }
     });
 
-    // ========== 字段翻译功能 ==========
+    // ========== 字段翻译 ==========
     $('transExecuteBtn').addEventListener('click', async () => {
       if (isBusy) return;
       const sourceFieldId = $('transSourceField').value;
       const targetFieldId = $('transTargetField').value;
       const targetLang = $('transTargetLang').value;
-      const customPrompt = $('transCustomPrompt').value || '';
 
-      if (!sourceFieldId) { bitable.ui.showToast({ message: '请选择需要翻译的字段', type: 'warning' }); return; }
-      if (!targetLang) { bitable.ui.showToast({ message: '请选择目标语言', type: 'warning' }); return; }
-      if (!targetFieldId) { bitable.ui.showToast({ message: '请选择写入目标字段', type: 'warning' }); return; }
+      if (!sourceFieldId) { bitable.ui.showToast({message:'请选择需要翻译的字段',type:'warning'}); return; }
+      if (!targetLang) { bitable.ui.showToast({message:'请选择目标语言',type:'warning'}); return; }
+      if (!targetFieldId) { bitable.ui.showToast({message:'请选择写入目标字段',type:'warning'}); return; }
 
       const rangeType = document.querySelector('input[name="transRange"]:checked').value;
-      const customCount = parseInt($('transCustomCount').value) || 5;
+      const customCount = parseInt($('transCustomCount').value)||5;
 
       isBusy = true;
       $('transExecuteBtn').disabled = true;
       $('transExecuteBtn').innerHTML = '<span class="spinner"></span> 翻译中...';
       $('transProgressSection').classList.remove('hidden');
+      $('transErrorLog').innerHTML = '';
+      $('transErrorLog').classList.add('hidden');
       $('transProgressTitle').textContent = '正在读取数据...';
+      $('transStatTransOk').textContent = '0';
+      $('transStatTransFail').textContent = '0';
+      $('transStatWriteOk').textContent = '0';
+      $('transStatWriteFail').textContent = '0';
+      $('transStatSkipped').textContent = '0';
 
       try {
         const table = await bitable.base.getActiveTable();
         const sourceField = await table.getField(sourceFieldId);
         const targetField = await table.getField(targetFieldId);
 
-        // 确定记录范围
         let recordIds = [...allRecordIds];
-        if (rangeType === 'custom') {
-          recordIds = recordIds.slice(0, customCount);
-        }
+        if (rangeType === 'custom') recordIds = recordIds.slice(0, customCount);
         const total = recordIds.length;
         $('transStatTotal').textContent = total;
+        if (total === 0) { bitable.ui.showToast({message:'没有可翻译的记录',type:'warning'}); resetTransBtn(); return; }
 
-        if (total === 0) {
-          bitable.ui.showToast({ message: '没有可翻译的记录', type: 'warning' });
-          isBusy = false;
-          $('transExecuteBtn').disabled = false;
-          $('transExecuteBtn').innerHTML = '🚀 开始翻译';
-          return;
-        }
-
-        // 读取源字段值
-        const textsToTranslate = [];
+        // 读取源字段
+        const items = [];
         let skipped = 0;
         for (let i = 0; i < recordIds.length; i++) {
-          const recordId = recordIds[i];
-          const value = normalizeValue(await sourceField.getValue(recordId));
-          if (!value.trim()) { skipped++; continue; }
-          textsToTranslate.push({ recordId, text: value });
+          const rid = recordIds[i];
+          const val = normalizeValue(await sourceField.getValue(rid));
+          if (!val.trim()) { skipped++; continue; }
+          items.push({ recordId: rid, text: val, index: i+1 });
         }
         $('transStatSkipped').textContent = skipped;
 
-        if (textsToTranslate.length === 0) {
-          bitable.ui.showToast({ message: '所有记录都为空，无需翻译', type: 'info' });
-          $('transProgressTitle').textContent = '✅ 翻译完成';
+        if (items.length === 0) {
+          bitable.ui.showToast({message:'所有记录都为空，无需翻译',type:'info'});
+          $('transProgressTitle').textContent = '✅ 完成（全部为空）';
           $('transProgressBar').style.width = '100%';
           $('transProgressPercent').textContent = '100%';
-          isBusy = false;
-          $('transExecuteBtn').disabled = false;
-          $('transExecuteBtn').innerHTML = '🚀 开始翻译';
+          resetTransBtn();
           return;
         }
 
-        // 批量翻译
-        $('transProgressTitle').textContent = '正在翻译...';
-        bitable.ui.showToast({ message: `正在翻译 ${textsToTranslate.length} 条记录...`, type: 'info' });
+        // 逐条翻译 + 写入（最可靠）
+        $('transProgressTitle').textContent = '正在翻译并写入...';
+        let transOk = 0, transFail = 0, writeOk = 0, writeFail = 0;
 
-        let success = 0, failed = 0;
-        const translatedValues = new Map();
-        const concurrency = 3;
-        let currentIndex = 0;
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          // 翻译
+          let translated = '';
+          try {
+            const result = await translateText(item.text, targetLang);
+            if (result.ok && result.text) {
+              translated = result.text;
+              transOk++;
+              $('transStatTransOk').textContent = transOk;
+            } else {
+              transFail++;
+              $('transStatTransFail').textContent = transFail;
+              appendError('transErrorLog', `记录${item.index}(${item.recordId}): 翻译失败 - ${result.error || '未知错误'}`);
+            }
+          } catch (e) {
+            transFail++;
+            $('transStatTransFail').textContent = transFail;
+            appendError('transErrorLog', `记录${item.index}(${item.recordId}): 翻译异常 - ${e.message || e}`);
+          }
 
-        async function translateWorker() {
-          while (currentIndex < textsToTranslate.length) {
-            const idx = currentIndex++;
-            const item = textsToTranslate[idx];
+          // 写入（只有翻译成功才写入）
+          if (translated) {
             try {
-              const result = await translateText(item.text, targetLang, customPrompt);
-              if (result.text) {
-                translatedValues.set(item.recordId, result.text);
-                success++;
+              await targetField.setValue(item.recordId, translated);
+              // 验证写入
+              const verify = normalizeValue(await targetField.getValue(item.recordId));
+              if (verify === translated || verify.includes(translated.substring(0, 10))) {
+                writeOk++;
+                $('transStatWriteOk').textContent = writeOk;
               } else {
-                failed++;
+                writeFail++;
+                $('transStatWriteFail').textContent = writeFail;
+                appendError('transErrorLog', `记录${item.index}(${item.recordId}): 写入验证失败，期望="${translated.substring(0,30)}..."，实际="${verify.substring(0,30)}..."`);
               }
             } catch (e) {
-              console.error(`翻译第 ${idx + 1} 条失败:`, e.message);
-              failed++;
+              writeFail++;
+              $('transStatWriteFail').textContent = writeFail;
+              appendError('transErrorLog', `记录${item.index}(${item.recordId}): 写入异常 - ${e.message || e}`);
             }
-            const percent = Math.round((currentIndex / textsToTranslate.length) * 100);
-            $('transProgressBar').style.width = percent + '%';
-            $('transProgressPercent').textContent = percent + '%';
-            $('transStatSuccess').textContent = success;
-            $('transStatFailed').textContent = failed;
           }
+
+          const percent = Math.round(((i+1)/items.length)*100);
+          $('transProgressBar').style.width = percent+'%';
+          $('transProgressPercent').textContent = percent+'%';
         }
 
-        const workers = Array.from({ length: Math.min(concurrency, textsToTranslate.length) }, () => translateWorker());
-        await Promise.all(workers);
-
-        // 写入目标字段
-        $('transProgressTitle').textContent = '正在写入翻译结果...';
-        try {
-          const records = Array.from(translatedValues.entries()).map(([record_id, value]) => ({
-            record_id,
-            fields: { [targetFieldId]: value }
-          }));
-          await table.setRecords(records);
-        } catch (e) {
-          console.warn('批量写入失败，逐条写入:', e.message);
-          for (const [recordId, value] of translatedValues.entries()) {
-            try { await targetField.setValue(recordId, value); } catch (e2) {}
-          }
-        }
-
-        $('transProgressBar').style.width = '100%';
-        $('transProgressPercent').textContent = '100%';
-        $('transProgressTitle').textContent = failed > 0 ? '⚠️ 部分完成' : '✅ 翻译完成';
-        bitable.ui.showToast({ message: `翻译完成！成功 ${success} 条，失败 ${failed} 条`, type: 'success' });
+        const allOk = transFail === 0 && writeFail === 0;
+        $('transProgressTitle').textContent = allOk ? `✅ 翻译完成（写入${writeOk}条）` : `⚠️ 部分完成（翻译${transOk}/${items.length}，写入${writeOk}/${items.length}）`;
+        bitable.ui.showToast({
+          message: `翻译完成！翻译成功${transOk}条，写入成功${writeOk}条${(transFail+writeFail)>0?('，失败'+(transFail+writeFail)+'条'):''}`,
+          type: allOk ? 'success' : 'warning'
+        });
       } catch (e) {
         console.error('翻译失败:', e);
-        showError(`翻译失败: ${e.message || '未知错误'}`);
+        showError('翻译失败: ' + (e.message || '未知错误'));
+        appendError('transErrorLog', '全局异常: ' + (e.message || JSON.stringify(e)));
         $('transProgressTitle').textContent = '❌ 翻译失败';
       } finally {
+        resetTransBtn();
+      }
+      function resetTransBtn() {
         isBusy = false;
         $('transExecuteBtn').disabled = false;
         $('transExecuteBtn').innerHTML = '🚀 开始翻译';
       }
     });
 
-    // 启动
     init();
   </script>
 </body>
