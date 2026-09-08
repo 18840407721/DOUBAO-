@@ -12,7 +12,6 @@
       --border-color: #dee0e3; --border-light: #e6e7e9;
       --primary-color: #3370ff; --primary-hover: #245bdb;
       --success-color: #00b42a; --warning-color: #ff7d00; --error-color: #f53f3f;
-      --hover-bg: rgba(31,35,41,0.06);
     }
     [data-theme="dark"] {
       --text-primary: #e8eaed; --text-secondary: #a7acb4; --text-tertiary: #7e828b;
@@ -20,7 +19,6 @@
       --border-color: #434343; --border-light: #3a3a3a;
       --primary-color: #4571e1; --primary-hover: #5a85e8;
       --success-color: #23c343; --warning-color: #ff8800; --error-color: #f76560;
-      --hover-bg: rgba(255,255,255,0.08);
     }
     body {
       font-family: -apple-system,BlinkMacSystemFont,'Helvetica Neue',Tahoma,'PingFang SC','Microsoft Yahei',Arial,sans-serif;
@@ -91,19 +89,12 @@
     .radio-item input[type="radio"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--primary-color); }
     .radio-item label { font-size: 13px; cursor: pointer; flex: 1; }
     .radio-item .inline-input { width: 100px; height: 28px; }
-    .switch-row {
-      display: flex; align-items: center; justify-content: space-between; padding: 8px 0;
-    }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
     .switch-row .label { font-size: 13px; display: flex; align-items: center; gap: 4px; }
     .switch { position: relative; width: 36px; height: 20px; cursor: pointer; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .switch .slider {
-      position: absolute; inset: 0; background: var(--border-color); border-radius: 20px; transition: .3s;
-    }
-    .switch .slider:before {
-      content: ""; position: absolute; height: 16px; width: 16px; left: 2px; bottom: 2px;
-      background: #fff; border-radius: 50%; transition: .3s;
-    }
+    .switch .slider { position: absolute; inset: 0; background: var(--border-color); border-radius: 20px; transition: .3s; }
+    .switch .slider:before { content: ""; position: absolute; height: 16px; width: 16px; left: 2px; bottom: 2px; background: #fff; border-radius: 50%; transition: .3s; }
     .switch input:checked + .slider { background: var(--primary-color); }
     .switch input:checked + .slider:before { transform: translateX(16px); }
     .btn {
@@ -123,32 +114,28 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .progress-section { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); }
-    .progress-title {
-      font-size: 13px; font-weight: 500; margin-bottom: 8px;
-      display: flex; justify-content: space-between;
-    }
+    .progress-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; display: flex; justify-content: space-between; }
     .progress-container { width: 100%; height: 6px; background: var(--bg-tertiary); border-radius: 3px; overflow: hidden; }
-    .progress-bar {
-      height: 100%; background: linear-gradient(90deg, var(--primary-color), #5a85e8);
-      border-radius: 3px; transition: width .3s;
-    }
+    .progress-bar { height: 100%; background: linear-gradient(90deg, var(--primary-color), #5a85e8); border-radius: 3px; transition: width .3s; }
     .progress-stats { display: flex; gap: 16px; margin-top: 8px; font-size: 12px; color: var(--text-secondary); flex-wrap: wrap; }
     .progress-stats span b { color: var(--text-primary); }
-    .alert {
-      padding: 8px 12px; border-radius: 4px; font-size: 12px; line-height: 1.5;
-      margin-bottom: 12px; display: flex; align-items: flex-start; gap: 6px;
-    }
+    .alert { padding: 8px 12px; border-radius: 4px; font-size: 12px; line-height: 1.5; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 6px; }
     .alert-error { background: rgba(245,63,63,.08); border: 1px solid rgba(245,63,63,.2); color: var(--error-color); }
     .alert-info { background: rgba(51,112,255,.08); border: 1px solid rgba(51,112,255,.2); color: var(--primary-color); }
     .alert-warning { background: rgba(255,125,0,.08); border: 1px solid rgba(255,125,0,.2); color: var(--warning-color); }
     .hidden { display: none !important; }
     .error-log {
       margin-top: 12px; padding: 10px; background: var(--bg-secondary); border-radius: 4px;
-      font-size: 11px; color: var(--error-color); max-height: 120px; overflow-y: auto;
+      font-size: 11px; color: var(--error-color); max-height: 150px; overflow-y: auto;
       font-family: monospace; white-space: pre-wrap; word-break: break-all;
     }
     .log-line { margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid var(--border-light); }
     .log-line:last-child { border-bottom: none; }
+    .debug-log {
+      margin-top: 8px; padding: 8px; background: var(--bg-secondary); border-radius: 4px;
+      font-size: 10px; color: var(--text-tertiary); max-height: 100px; overflow-y: auto;
+      font-family: monospace;
+    }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
   </style>
@@ -176,7 +163,7 @@
         <div class="form-group">
           <label class="form-label">选择目标字段<span class="required">*</span></label>
           <select class="form-select" id="incTargetField"><option value="">加载中...</option></select>
-          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">建议选择「文本」或「数字」类型字段</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">建议选择「文本」类型字段</div>
         </div>
         <div class="form-row">
           <div class="form-group"><label class="form-label">起始值</label><input type="number" class="form-input" id="incStart" value="1" min="0"></div>
@@ -248,7 +235,7 @@
         <div class="form-group">
           <label class="form-label">写入目标字段<span class="required">*</span></label>
           <select class="form-select" id="transTargetField"><option value="">请选择</option></select>
-          <div style="font-size:11px;color:var(--warning-color);margin-top:4px;" id="transFieldWarn" class="hidden">⚠️ 建议目标字段为「文本」或「多行文本」类型</div>
+          <div style="font-size:11px;color:var(--warning-color);margin-top:4px;" id="transFieldWarn" class="hidden">⚠️ 建议目标字段为「文本」类型</div>
         </div>
         <div class="collapse-header" id="transCustomCollapse">
           <span class="arrow">▶</span><span>自定义翻译要求</span>
@@ -281,6 +268,7 @@
             <span>跳过：<b id="transStatSkipped">0</b></span>
           </div>
           <div class="error-log hidden" id="transErrorLog"></div>
+          <div class="debug-log hidden" id="transDebugLog"></div>
         </div>
       </div>
     </div>
@@ -298,16 +286,15 @@
 
     function createMockBitable() {
       const fields = [
-        {id:'fld1',name:'序号',type:1},{id:'fld2',name:'产品名称',type:1},
-        {id:'fld3',name:'产品描述',type:1},{id:'fld4',name:'英文名称',type:1},
-        {id:'fld5',name:'价格',type:2},{id:'fld6',name:'分类',type:3},
+        {id:'fld1',name:'序号',type:1},{id:'fld2',name:'定制内容',type:1},
+        {id:'fld3',name:'翻译',type:1},{id:'fld4',name:'收货人姓名',type:1},
       ];
       const records = [
-        {record_id:'rec1',fields:{fld1:'',fld2:'智能手表',fld3:'一款功能强大的智能手表',fld4:'',fld6:'电子产品'}},
-        {record_id:'rec2',fields:{fld1:'',fld2:'无线耳机',fld3:'高品质无线蓝牙耳机',fld4:'',fld6:'电子产品'}},
-        {record_id:'rec3',fields:{fld1:'',fld2:'机械键盘',fld3:'青轴机械键盘，手感极佳',fld4:'',fld6:'电脑配件'}},
-        {record_id:'rec4',fields:{fld1:'',fld2:'鼠标垫',fld3:'',fld4:'',fld6:'电脑配件'}},
-        {record_id:'rec5',fields:{fld1:'',fld2:'USB集线器',fld3:'4口USB 3.0集线器',fld4:'',fld6:'电脑配件'}},
+        {record_id:'rec1',fields:{fld1:'',fld2:'Isabella',fld3:'',fld4:'Janet Upton'}},
+        {record_id:'rec2',fields:{fld1:'',fld2:'M.',fld3:'',fld4:'MIRIAM MENAKER'}},
+        {record_id:'rec3',fields:{fld1:'',fld2:'Kailyn',fld3:'',fld4:'Carrie Douglas'}},
+        {record_id:'rec4',fields:{fld1:'',fld2:'villa 2025',fld3:'',fld4:'Betsy Mejia'}},
+        {record_id:'rec5',fields:{fld1:'',fld2:'test',fld3:'',fld4:'Jacqueline perez'}},
       ];
       return {
         base:{getActiveTable:async()=>({
@@ -316,45 +303,56 @@
           getRecordIdList:async()=>records.map(r=>r.record_id),
           getField:async(fid)=>({
             getValue:async(rid)=>{const r=records.find(x=>x.record_id===rid);return r?r.fields[fid]:'';},
-            setValue:async(rid,val)=>{const r=records.find(x=>x.record_id===rid);if(r)r.fields[fid]=val;console.log('[演示]写入',rid,fid,'=',val);},
+            setValue:async(rid,val)=>{const r=records.find(x=>x.record_id===rid);if(r)r.fields[fid]=val;console.log('[演示]setValue',rid,fid,'=',JSON.stringify(val));},
           }),
-          setRecords:async(recs)=>{recs.forEach(({record_id,fields})=>{const r=records.find(x=>x.record_id===record_id);if(r)Object.entries(fields).forEach(([k,v])=>r.fields[k]=v);});console.log('[演示]批量写入',recs.length,'条');},
+          setRecords:async(recs)=>{recs.forEach(({record_id,fields})=>{const r=records.find(x=>x.record_id===record_id);if(r)Object.entries(fields).forEach(([k,v])=>r.fields[k]=v);});console.log('[演示]setRecords',JSON.stringify(recs));},
         })},
         bridge:{getTheme:async()=>'LIGHT',onThemeChange:()=>()=>{}},
         ui:{showToast:async({message,type})=>console.log('[Toast-'+type+']',message)},
       };
     }
 
-    // 翻译服务 - 增加错误详情和重试
+    // 翻译服务 - 使用 CORS 代理解决跨域问题
     async function translateText(text, targetLang) {
       if (!text || !text.trim()) return { ok: true, text: '', detectedLang: 'auto' };
       const errors = [];
 
-      // 方案1: Google Translate
-      try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
-        const resp = await fetch(url, {
-          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
-          mode: 'cors',
-        });
-        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-        const data = await resp.json();
-        let result = '';
-        if (Array.isArray(data) && Array.isArray(data[0])) {
-          data[0].forEach(seg => { if (seg && seg[0]) result += seg[0]; });
+      // 方案1: Google Translate + CORS 代理
+      const proxies = [
+        (url) => 'https://corsproxy.io/?' + encodeURIComponent(url),
+        (url) => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+        (url) => url, // 直连（最后尝试）
+      ];
+
+      for (let pi = 0; pi < proxies.length; pi++) {
+        try {
+          const rawUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+          const url = proxies[pi](rawUrl);
+          console.log(`[翻译] 尝试方案 Google (代理${pi})`);
+          const resp = await fetch(url, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+          });
+          if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+          const data = await resp.json();
+          let result = '';
+          if (Array.isArray(data) && Array.isArray(data[0])) {
+            data[0].forEach(seg => { if (seg && seg[0]) result += seg[0]; });
+          }
+          if (!result) throw new Error('翻译结果为空');
+          console.log(`[翻译] Google成功: "${text}" -> "${result}"`);
+          return { ok: true, text: result, detectedLang: data[2] || 'auto' };
+        } catch (e) {
+          errors.push(`Google代理${pi}: ${e.message}`);
+          console.warn(`[翻译] Google代理${pi}失败:`, e.message);
         }
-        if (!result) throw new Error('翻译结果为空');
-        return { ok: true, text: result, detectedLang: data[2] || 'auto' };
-      } catch (e) {
-        errors.push('Google: ' + e.message);
-        console.warn('Google翻译失败:', e.message);
       }
 
-      // 方案2: MyMemory
+      // 方案2: MyMemory（支持CORS）
       try {
         const langMap = { en:'en-US', 'zh-CN':'zh-CN', 'zh-TW':'zh-TW', ja:'ja', ko:'ko' };
         const mmTarget = langMap[targetLang] || targetLang;
         const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=autodetect|${mmTarget}`;
+        console.log('[翻译] 尝试方案 MyMemory');
         const resp = await fetch(url);
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
         const data = await resp.json();
@@ -363,10 +361,11 @@
         }
         const translated = data.responseData.translatedText;
         if (!translated) throw new Error('翻译结果为空');
+        console.log(`[翻译] MyMemory成功: "${text}" -> "${translated}"`);
         return { ok: true, text: translated, detectedLang: 'auto' };
       } catch (e) {
         errors.push('MyMemory: ' + e.message);
-        console.warn('MyMemory翻译失败:', e.message);
+        console.warn('[翻译] MyMemory失败:', e.message);
       }
 
       return { ok: false, text: '', error: errors.join(' | ') };
@@ -378,7 +377,7 @@
     function showError(msg) {
       $('errorMessage').textContent = msg;
       $('errorAlert').classList.remove('hidden');
-      setTimeout(() => $('errorAlert').classList.add('hidden'), 8000);
+      setTimeout(() => $('errorAlert').classList.add('hidden'), 10000);
     }
     function appendError(logId, msg) {
       const el = $(logId);
@@ -389,6 +388,15 @@
       el.appendChild(line);
       el.scrollTop = el.scrollHeight;
     }
+    function appendDebug(msg) {
+      const el = $('transDebugLog');
+      el.classList.remove('hidden');
+      const line = document.createElement('div');
+      line.textContent = '[DEBUG] ' + msg;
+      el.appendChild(line);
+      el.scrollTop = el.scrollHeight;
+      console.log('[DEBUG]', msg);
+    }
     function getFieldTypeName(type) {
       const n = {1:'文本',2:'数字',3:'单选',4:'多选',5:'日期',7:'复选框',11:'人员',13:'电话',15:'超链接',17:'附件',18:'单向关联',19:'查找引用',20:'公式',21:'双向关联',22:'地理位置',23:'群聊',1001:'创建时间',1002:'修改时间',1003:'创建人',1004:'修改人',1005:'自动编号',99001:'条码',99002:'进度',99003:'货币',99004:'评分',99005:'邮箱'};
       return n[type] || '类型'+type;
@@ -397,7 +405,13 @@
       if (v === null || v === undefined) return '';
       if (typeof v === 'string') return v;
       if (typeof v === 'number' || typeof v === 'boolean') return String(v);
-      if (Array.isArray(v)) return v.map(i => typeof i==='string'?i:(i.text||i.name||JSON.stringify(i))).join(', ');
+      if (Array.isArray(v)) {
+        // 多行文本 segment 数组
+        if (v.length > 0 && typeof v[0] === 'object' && v[0] !== null && 'text' in v[0]) {
+          return v.map(s => s.text || '').join('');
+        }
+        return v.map(i => typeof i==='string'?i:(i.text||i.name||JSON.stringify(i))).join(', ');
+      }
       if (typeof v === 'object') return v.text || v.name || v.link || JSON.stringify(v);
       return String(v);
     }
@@ -415,6 +429,8 @@
         allFields = await table.getFieldMetaList();
         allRecordIds = await table.getRecordIdList();
         $('recordCount').textContent = allRecordIds.length;
+        appendDebug('初始化完成，字段数=' + allFields.length + '，记录数=' + allRecordIds.length);
+        allFields.forEach(f => appendDebug(`字段: ${f.name} (type=${f.type}, id=${f.id})`));
 
         const writableTypes = [1,2,3,4,7,11,13,15,17,22,99003,99004,99005];
         const writable = allFields.filter(f => writableTypes.includes(f.type));
@@ -439,7 +455,6 @@
             d.className = 'alert alert-info';
             d.innerHTML = '<span>ℹ️</span><span>演示模式：数据为模拟数据。在多维表格中添加此插件即可使用真实数据。</span>';
             document.querySelector('.app-container').insertBefore(d, document.querySelector('.tab-header'));
-            setTimeout(() => d.remove(), 10000);
           }, 500);
         }
       } catch (e) {
@@ -461,19 +476,52 @@
       $('transCustomCollapse').classList.toggle('open');
       $('transCustomBody').classList.toggle('open');
     });
-
-    // 目标字段类型警告
     $('transTargetField').addEventListener('change', () => {
       const fid = $('transTargetField').value;
       const f = allFields.find(x => x.id === fid);
       const warn = $('transFieldWarn');
-      if (f && f.type !== 1 && f.type !== 15) {
-        warn.textContent = '⚠️ 当前目标字段类型为「' + getFieldTypeName(f.type) + '」，建议使用「文本」类型以确保写入成功';
+      if (f && f.type !== 1) {
+        warn.textContent = '⚠️ 当前目标字段类型为「' + getFieldTypeName(f.type) + '」，建议使用「文本」类型';
         warn.classList.remove('hidden');
       } else {
         warn.classList.add('hidden');
       }
     });
+
+    // 通用写入函数 - 使用 table.setRecords 批量更新（最可靠）
+    async function writeRecords(table, fieldId, valuesMap) {
+      const records = Array.from(valuesMap.entries()).map(([record_id, value]) => ({
+        record_id,
+        fields: { [fieldId]: value },
+      }));
+      appendDebug(`调用 setRecords，共 ${records.length} 条，字段ID=${fieldId}`);
+      appendDebug('第一条数据: ' + JSON.stringify(records[0]));
+      await table.setRecords(records);
+      appendDebug('setRecords 调用完成');
+    }
+
+    // 验证写入结果
+    async function verifyWrite(table, fieldId, valuesMap) {
+      let verified = 0, failed = 0;
+      const field = await table.getField(fieldId);
+      for (const [recordId, expectedValue] of valuesMap.entries()) {
+        try {
+          const raw = await field.getValue(recordId);
+          const actual = normalizeValue(raw);
+          appendDebug(`验证 ${recordId}: 期望="${expectedValue.substring(0,20)}", 实际="${actual.substring(0,20)}", 原始值类型=${typeof raw}, 原始值=${JSON.stringify(raw).substring(0,50)}`);
+          if (actual === expectedValue || (actual && expectedValue && actual.includes(expectedValue.substring(0, 5)))) {
+            verified++;
+          } else {
+            failed++;
+            appendError('transErrorLog', `记录(${recordId}): 写入验证失败，期望="${expectedValue}"，实际="${actual}"`);
+          }
+        } catch (e) {
+          failed++;
+          appendError('transErrorLog', `记录(${recordId}): 验证异常 - ${e.message}`);
+        }
+      }
+      return { verified, failed };
+    }
 
     // ========== 自增字段 ==========
     $('incExecuteBtn').addEventListener('click', async () => {
@@ -499,45 +547,48 @@
 
       try {
         const table = await bitable.base.getActiveTable();
-        const targetField = await table.getField(targetFieldId);
         let recordIds = [...allRecordIds];
         if (rangeType === 'custom') recordIds = recordIds.slice(0, customCount);
         const total = recordIds.length;
         $('incStatTotal').textContent = total;
         if (total === 0) { bitable.ui.showToast({message:'没有可处理的记录',type:'warning'}); resetIncBtn(); return; }
 
-        let writeSuccess = 0, writeFailed = 0;
-
-        // 逐条写入（最可靠的方式）
+        // 构建值映射
+        const valuesMap = new Map();
         for (let i = 0; i < total; i++) {
           const num = start + i * step;
           let value = String(num);
           if (pad > 0) value = value.padStart(pad, '0');
           value = prefix + value + suffix;
+          valuesMap.set(recordIds[i], value);
+        }
 
+        // 使用 setRecords 批量写入
+        $('incProgressTitle').textContent = '正在写入...';
+        await writeRecords(table, targetFieldId, valuesMap);
+
+        // 验证
+        $('incProgressTitle').textContent = '正在验证...';
+        const field = await table.getField(targetFieldId);
+        let writeSuccess = 0, writeFailed = 0;
+        for (const [recordId, expected] of valuesMap.entries()) {
           try {
-            await targetField.setValue(recordIds[i], value);
-            // 验证写入
-            const verify = await targetField.getValue(recordIds[i]);
-            const verifyStr = normalizeValue(verify);
-            if (verifyStr === value || verifyStr.includes(value)) {
-              writeSuccess++;
-            } else {
+            const actual = normalizeValue(await field.getValue(recordId));
+            if (actual === expected || actual.includes(expected)) writeSuccess++;
+            else {
               writeFailed++;
-              appendError('incErrorLog', `记录${i+1}(${recordIds[i]}): 写入验证失败，期望值="${value}"，实际值="${verifyStr}"`);
+              appendError('incErrorLog', `记录(${recordId}): 验证失败，期望="${expected}"，实际="${actual}"`);
             }
           } catch (e) {
             writeFailed++;
-            appendError('incErrorLog', `记录${i+1}(${recordIds[i]}): 写入异常 - ${e.message || e}`);
+            appendError('incErrorLog', `记录(${recordId}): 验证异常 - ${e.message}`);
           }
-
-          const percent = Math.round(((i+1)/total)*100);
-          $('incProgressBar').style.width = percent+'%';
-          $('incProgressPercent').textContent = percent+'%';
-          $('incStatWriteSuccess').textContent = writeSuccess;
-          $('incStatWriteFailed').textContent = writeFailed;
         }
 
+        $('incProgressBar').style.width = '100%';
+        $('incProgressPercent').textContent = '100%';
+        $('incStatWriteSuccess').textContent = writeSuccess;
+        $('incStatWriteFailed').textContent = writeFailed;
         $('incProgressTitle').textContent = writeFailed > 0 ? '⚠️ 部分完成（'+writeSuccess+'/'+total+'）' : '✅ 生成完成（'+writeSuccess+'/'+total+'）';
         bitable.ui.showToast({message:`自增序号生成完成！成功${writeSuccess}条，失败${writeFailed}条`, type: writeFailed>0?'warning':'success'});
       } catch (e) {
@@ -575,6 +626,8 @@
       $('transProgressSection').classList.remove('hidden');
       $('transErrorLog').innerHTML = '';
       $('transErrorLog').classList.add('hidden');
+      $('transDebugLog').innerHTML = '';
+      $('transDebugLog').classList.add('hidden');
       $('transProgressTitle').textContent = '正在读取数据...';
       $('transStatTransOk').textContent = '0';
       $('transStatTransFail').textContent = '0';
@@ -591,6 +644,8 @@
         if (rangeType === 'custom') recordIds = recordIds.slice(0, customCount);
         const total = recordIds.length;
         $('transStatTotal').textContent = total;
+        appendDebug(`处理范围: ${total} 条记录，源字段=${sourceFieldId}，目标字段=${targetFieldId}，目标语言=${targetLang}`);
+
         if (total === 0) { bitable.ui.showToast({message:'没有可翻译的记录',type:'warning'}); resetTransBtn(); return; }
 
         // 读取源字段
@@ -598,11 +653,14 @@
         let skipped = 0;
         for (let i = 0; i < recordIds.length; i++) {
           const rid = recordIds[i];
-          const val = normalizeValue(await sourceField.getValue(rid));
+          const rawVal = await sourceField.getValue(rid);
+          const val = normalizeValue(rawVal);
+          appendDebug(`读取记录${i+1}(${rid}): 原始类型=${typeof rawVal}, 值="${val}"`);
           if (!val.trim()) { skipped++; continue; }
           items.push({ recordId: rid, text: val, index: i+1 });
         }
         $('transStatSkipped').textContent = skipped;
+        appendDebug(`有效待翻译: ${items.length} 条，跳过空值: ${skipped} 条`);
 
         if (items.length === 0) {
           bitable.ui.showToast({message:'所有记录都为空，无需翻译',type:'info'});
@@ -613,67 +671,80 @@
           return;
         }
 
-        // 逐条翻译 + 写入（最可靠）
-        $('transProgressTitle').textContent = '正在翻译并写入...';
-        let transOk = 0, transFail = 0, writeOk = 0, writeFail = 0;
+        // 逐条翻译
+        $('transProgressTitle').textContent = '正在翻译...';
+        let transOk = 0, transFail = 0;
+        const translatedMap = new Map(); // recordId -> translated text
 
         for (let i = 0; i < items.length; i++) {
           const item = items[i];
-          // 翻译
-          let translated = '';
+          appendDebug(`翻译记录${item.index}(${item.recordId}): "${item.text.substring(0,30)}"`);
           try {
             const result = await translateText(item.text, targetLang);
-            if (result.ok && result.text) {
-              translated = result.text;
+            if (result.ok && result.text && result.text.trim()) {
+              translatedMap.set(item.recordId, result.text);
               transOk++;
               $('transStatTransOk').textContent = transOk;
+              appendDebug(`  -> 翻译成功: "${result.text.substring(0,30)}"`);
             } else {
               transFail++;
               $('transStatTransFail').textContent = transFail;
               appendError('transErrorLog', `记录${item.index}(${item.recordId}): 翻译失败 - ${result.error || '未知错误'}`);
+              appendDebug(`  -> 翻译失败: ${result.error}`);
             }
           } catch (e) {
             transFail++;
             $('transStatTransFail').textContent = transFail;
             appendError('transErrorLog', `记录${item.index}(${item.recordId}): 翻译异常 - ${e.message || e}`);
+            appendDebug(`  -> 翻译异常: ${e.message}`);
           }
 
-          // 写入（只有翻译成功才写入）
-          if (translated) {
-            try {
-              await targetField.setValue(item.recordId, translated);
-              // 验证写入
-              const verify = normalizeValue(await targetField.getValue(item.recordId));
-              if (verify === translated || verify.includes(translated.substring(0, 10))) {
-                writeOk++;
-                $('transStatWriteOk').textContent = writeOk;
-              } else {
-                writeFail++;
-                $('transStatWriteFail').textContent = writeFail;
-                appendError('transErrorLog', `记录${item.index}(${item.recordId}): 写入验证失败，期望="${translated.substring(0,30)}..."，实际="${verify.substring(0,30)}..."`);
-              }
-            } catch (e) {
-              writeFail++;
-              $('transStatWriteFail').textContent = writeFail;
-              appendError('transErrorLog', `记录${item.index}(${item.recordId}): 写入异常 - ${e.message || e}`);
-            }
-          }
-
-          const percent = Math.round(((i+1)/items.length)*100);
+          const percent = Math.round(((i+1)/items.length)*50); // 翻译占50%进度
           $('transProgressBar').style.width = percent+'%';
           $('transProgressPercent').textContent = percent+'%';
         }
 
-        const allOk = transFail === 0 && writeFail === 0;
-        $('transProgressTitle').textContent = allOk ? `✅ 翻译完成（写入${writeOk}条）` : `⚠️ 部分完成（翻译${transOk}/${items.length}，写入${writeOk}/${items.length}）`;
+        appendDebug(`翻译完成: 成功${transOk}，失败${transFail}`);
+
+        if (translatedMap.size === 0) {
+          $('transProgressTitle').textContent = '❌ 全部翻译失败';
+          $('transProgressBar').style.width = '100%';
+          $('transProgressPercent').textContent = '100%';
+          bitable.ui.showToast({message:'全部翻译失败，请查看错误日志', type:'error'});
+          resetTransBtn();
+          return;
+        }
+
+        // 使用 setRecords 批量写入
+        $('transProgressTitle').textContent = '正在写入...';
+        $('transProgressBar').style.width = '60%';
+        $('transProgressPercent').textContent = '60%';
+        await writeRecords(table, targetFieldId, translatedMap);
+
+        // 验证写入
+        $('transProgressTitle').textContent = '正在验证...';
+        $('transProgressBar').style.width = '80%';
+        $('transProgressPercent').textContent = '80%';
+        const verifyResult = await verifyWrite(table, targetFieldId, translatedMap);
+        $('transStatWriteOk').textContent = verifyResult.verified;
+        $('transStatWriteFail').textContent = verifyResult.failed;
+
+        $('transProgressBar').style.width = '100%';
+        $('transProgressPercent').textContent = '100%';
+
+        const allOk = transFail === 0 && verifyResult.failed === 0;
+        $('transProgressTitle').textContent = allOk
+          ? `✅ 翻译完成（翻译${transOk}条，写入${verifyResult.verified}条）`
+          : `⚠️ 部分完成（翻译${transOk}/${items.length}，写入${verifyResult.verified}/${translatedMap.size}）`;
         bitable.ui.showToast({
-          message: `翻译完成！翻译成功${transOk}条，写入成功${writeOk}条${(transFail+writeFail)>0?('，失败'+(transFail+writeFail)+'条'):''}`,
+          message: `翻译完成！翻译成功${transOk}条，写入成功${verifyResult.verified}条${(transFail+verifyResult.failed)>0?('，失败'+(transFail+verifyResult.failed)+'条'):''}`,
           type: allOk ? 'success' : 'warning'
         });
       } catch (e) {
         console.error('翻译失败:', e);
         showError('翻译失败: ' + (e.message || '未知错误'));
         appendError('transErrorLog', '全局异常: ' + (e.message || JSON.stringify(e)));
+        appendDebug('全局异常: ' + (e.stack || e.message));
         $('transProgressTitle').textContent = '❌ 翻译失败';
       } finally {
         resetTransBtn();
